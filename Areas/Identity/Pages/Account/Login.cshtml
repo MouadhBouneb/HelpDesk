@@ -1,0 +1,92 @@
+﻿@page
+@model LoginModel
+
+@section VendorStyles {
+<link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css">
+}
+
+@section VendorScripts {
+<script src="~/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
+<script src="~/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
+<script src="~/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+}
+
+@section PageStyles {
+<link rel="stylesheet" href="~/vendor/css/pages/page-auth.dist.css">
+}
+
+@section PageScripts {
+<script src="~/js/pages-auth.dist.js"></script>
+}
+
+<div class="container-xxl">
+  <div class="authentication-wrapper authentication-basic container-p-y">
+    <div class="authentication-inner py-4">
+      <!-- Login -->
+      <div class="card">
+        <div class="card-body">
+          <!-- Logo -->
+          <div class="app-brand justify-content-center mb-4 mt-2">
+            <a href="/" class="app-brand-link gap-2">
+              <span class="app-brand-logo demo">@await Html.PartialAsync("../_Partials/_Macros")</span>
+              <span class="app-brand-text demo text-body fw-bold ms-1">@TempData.Peek("appName")</span>
+            </a>
+          </div>
+          <!-- /Logo -->
+          <h4 class="mb-1 pt-2">Bienvenue chez HelpDesk! 👋</h4>
+          <form id="account" class="mb-3" method="POST">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    @* <label asp-for="Input.Email" class="form-label">Email</label> *@
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-password-toggle">
+              <div class="d-flex justify-content-between">
+                <label class="form-label" for="password">Mot de passe</label>
+                @* <a id="forgot-password" asp-page="./ForgotPassword">
+                  <small>Mot de passe oublier?</small>
+                </a> *@
+              </div>
+              <div class="input-group input-group-merge">
+                <input asp-for="Input.Password" class="form-control" id="password" autocomplete="current-password" aria-required="true" placeholder="password" aria-describedby="password" />
+                    @* <label asp-for="Input.Password" class="form-label">Password</label> *@
+                    
+                <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+              </div>
+              <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+              <div class="form-check">
+                <label asp-for="Input.RememberMe" class="form-label">
+                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                        Se souvenir de moi
+                </label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <button class="btn btn-primary d-grid w-100" id="login-submit" type="submit">Se connecter</button>
+            </div>
+            <p class="text-center">
+            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">
+              <span>S'inscrire</span>
+            </a>
+          </p>
+          </form>
+
+          
+
+          
+        </div>
+      </div>
+      <!-- /Register -->
+    </div>
+  </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

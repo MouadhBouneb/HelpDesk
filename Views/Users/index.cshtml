@@ -1,0 +1,223 @@
+@model HelpDesk4GL.ViewModels.UserViewModel
+
+
+@section VendorStyles {
+<link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.dist.css">
+<link rel="stylesheet" href="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.dist.css">
+<link rel="stylesheet" href="~/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.dist.css">
+<link rel="stylesheet" href="~/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.dist.css">
+<link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+<link rel="stylesheet" href="~/vendor/libs/bootstrap-select/bootstrap-select.dist.css" />
+<link rel="stylesheet" href="~/vendor/libs/typeahead-js/typeahead.dist.css" />
+<link rel="stylesheet" href="~/vendor/libs/tagify/tagify.dist.css" />
+
+<!-- Row Group CSS -->
+<link rel="stylesheet" href="~/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.dist.css">
+<!-- Form Validation -->
+<link rel="stylesheet" href="~/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+}
+
+@section VendorScripts {
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="~/vendor/libs/datatables-bs5/datatables-bootstrap5.dist.js"></script>
+  <script src="~/vendor/libs/jquery/jquery.dist.js"></script>
+
+<!-- Flat Picker -->
+<script src="~/vendor/libs/moment/moment.dist.js"></script>
+<!-- Form Validation -->
+<script src="~/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
+<script src="~/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
+<script src="~/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+<script src="~/vendor/libs/select2/select2.dist.js"></script>
+<script src="~/vendor/libs/bootstrap-select/bootstrap-select.dist.js"></script>
+<script src="~/vendor/libs/typeahead-js/typeahead.dist.js"></script>
+<script src="~/vendor/libs/tagify/tagify.dist.js"></script>
+
+
+}
+
+@section PageScripts {
+    <script src="~/vendor/libs/jquery/jquery.dist.js" asp-append-version="true"></script>
+
+  <script src="~/js/forms-selects.dist.js"></script>
+<script src="~/js/forms-tagify.dist.js"></script>
+<script src="~/js/forms-typeahead.dist.js"></script>
+<script src="~/js/tables-datatables-basic.dist.js"></script>
+<script src="~/js/modal-create-app.dist.js"></script>
+
+}
+
+@* ************** Content ************** *@
+<h4 class="fw-bold py-3 mb-4">
+  <span class="text-muted fw-light">Utilisateur</span>
+</h4>
+@if(Model.Message!=""){
+        <div class="alert  @if (Model.status) { <text>alert-success</text> } else { <text>alert-danger</text> }  alert-dismissible" id="alert" role="alert">
+          @Model.Message
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+          </button>
+        </div>
+}
+
+
+<div class="card h-75">
+  <div class="card-header">
+    <div class="float-end">
+<button class="btn btn-secondary btn-primary"  data-bs-toggle="offcanvas" type="button" data-bs-target="#offcanvasEnd" aria-controls="offcanvasEnd"
+><span><i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Nouveaux</span></span></button>
+
+     
+
+    </div>
+  </div>
+  <div class="table-responsive text-nowrap h-100">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>fullName</th>
+          <th>role</th>
+          <th>Email</th>
+          <th>Date creation</th>
+          <th>Date modification</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody class="table-border-bottom-0">
+   @if (Model != null)
+      {
+        @foreach (var item in Model.users)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.role)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.createdAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.updatedAt)
+                </td>
+                 <td>
+            <div class="dropdown">
+              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_user_@item.Id"><i class="ti ti-pencil me-1"></i>Modifié</a>                                   
+                <a class="dropdown-item" href="#" onclick="submitForm('@item.Id')" ><i class="ti ti-trash me-1"></i> Supprimé</a>
+              </div>
+            </div>
+          </td>
+            </tr>
+            <div class="modal fade" id="edit_user_@item.Id" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-lg modal-dialog-centered modal-simple modal-upgrade-plan">
+                <div class="modal-content p-3 p-md-5">
+                  <div class="modal-body p-2">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="text-center">
+                      <h3 class="mb-2">User</h3>
+                      <p>Modifier utilisateur</p>
+                    </div>
+                    @using (Html.BeginForm("Edit", "Users", FormMethod.Post))
+                    {
+                      <input type="hidden" name="id" value="@item.Id" />
+                        <div class="col-sm-12">
+                            <label class="form-label" for="basicFullname">fullName</label>
+                            <input type="text" class="form-control" name="fullName" value="@item.fullName" />
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="form-label" for="basicFullname">Email</label>
+                            <input type="Email" class="form-control" name="Email" value="@item.Email" />
+                        </div>
+                        @* <div class="col-sm-12">
+                            <label class="form-label" for="basicFullname">password</label>
+                            <input type="password" class="form-control" name="password" value="@item.PasswordHash" />
+                        </div> *@
+                        
+                        <div class="col-12 ">
+                            <label class="form-label" for="modalEditUserStatus">Role : </label>
+                            <select name="role" class="form-select" aria-label="Default select example" value="@item.role">
+                            <option value="USER">Utilisateur</option>
+                            <option value="TECK">Technicien</option>
+                            </select>
+                        </div>
+                    
+                        <div class="col-12 text-center mt-5">
+                            <button type="submit" class="btn btn-primary me-sm-3 me-1">Enregistrer</button>
+                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Annuler</button>
+                        </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+        }
+      }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+ <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEnd" aria-labelledby="offcanvasEndLabel">
+    <div class="offcanvas-header">
+      <h5 id="offcanvasEndLabel" class="offcanvas-title">Nouveaux Utilisateur</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body my-auto mx-0 flex-grow-0">
+    @using (Html.BeginForm("Create", "Users", FormMethod.Post))
+    {            
+        <div class="col-sm-12">
+            <label class="form-label" for="basicFullname">fullName</label>
+            <input type="text" class="form-control" name="fullName" />
+        </div>
+        <div class="col-sm-12">
+            <label class="form-label" for="basicFullname">Email</label>
+            <input type="Email" class="form-control" name="Email"  />
+        </div>
+        <div class="col-sm-12">
+            <label class="form-label" for="basicFullname">password</label>
+            <input type="password" class="form-control" name="password" />
+        </div>
+        <div class="col-sm-12">
+            <label class="form-label" for="modalEditUserStatus">Role : </label>
+            <select name="role" class="form-select" aria-label="Default select example">
+                <option value="USER">Utilisateur</option>
+                <option value="TECK">Technicien</option>
+            </select>
+        </div>
+        <div class="col-sm-12 mt-5" >
+            <button type="submit" class="btn btn-primary data-submit me-sm-3 me-1">Enregistrer</button>
+            <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Annuler</button>
+        </div>
+    }
+    </div>
+</div>
+<!-- Create App Modal -->
+
+<!--/ Create App Modal -->
+
+<script>
+    // Wait for document ready
+      window.addEventListener("load", function() {
+    setTimeout(function() {
+      var myDiv = document.getElementById("alert"); // Get the div element by its id
+      myDiv.style.display = "none"; // Set the display property to "none" to hide the div
+    }, 4000); // 3000 milliseconds = 3 seconds
+  });
+
+    function submitForm(id) {
+      console.log("id0",id)
+      var url = '/Users/Delete?id=' + encodeURIComponent(id) 
+      window.location.href = url;
+      
+    }
+</script>
