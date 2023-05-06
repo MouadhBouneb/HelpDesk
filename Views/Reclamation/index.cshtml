@@ -1,5 +1,5 @@
-@model HelpDesk4GL.ViewModels.ReclamationsViewModel
 
+@model HelpDesk4GL.ViewModels.ReclamationsViewModel
 
 @section VendorStyles {
 <link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.dist.css">
@@ -66,9 +66,12 @@
    @using (Html.BeginForm("Filtre", "Reclamation", FormMethod.Post))
                     {
                       <div class="row">
+
+                      @if (Model.role != "USER")
+                      {
                         <div class="col-4 ">
                           <label class="form-label" for="modalEditUserStatus">Utilisateur : </label>
-                          <select name="etat" class="form-select" aria-label="Default select example" >
+                          <select name="userId" class="form-select" aria-label="Default select example" >
                               <option value="-1">Aucune choix selectionné</option>
                               @foreach (var item in Model.users)
                               {
@@ -76,6 +79,7 @@
                               }
                           </select>
                         </div>
+                      }
                         <div class="col-4 ">
                           <label class="form-label" for="modalEditUserStatus">Etat : </label>
                           <select name="etat" class="form-select" aria-label="Default select example" >
@@ -87,8 +91,7 @@
                           </select>
                         </div>
                          <div class="col-4 text-center ">
-                        <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-4">Enregistrer</button>
-                        <button type="reset" class="btn btn-label-secondary mt-4" data-bs-dismiss="modal" aria-label="Close">Annuler</button>
+                        <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-4">Filtré</button>
                       </div>
                       </div>
                      

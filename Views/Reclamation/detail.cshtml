@@ -64,6 +64,8 @@
   <div class="card-header">
 
     <div class="float-end">
+      @if (Model.role == "USER")
+                      {
         @if(Model.reclamation.etat!="5")
         {
              @using (Html.BeginForm("Etat", "Reclamation", FormMethod.Post))
@@ -84,6 +86,7 @@
                         </span>
                 </button>       
         }
+      }
     </div>   
   </div>
 
@@ -100,17 +103,28 @@
               <label class="form-label" for="basicFullname">Description</label>
                 <input type="text"  class="form-control" name="desciption" value="@Model.reclamation.desciption"/>
             </div>
-
-            <div class="col-4 ">
-                        <label class="form-label" for="modalEditUserStatus">Etat : </label>
-                        <select name="etat" class="form-select" aria-label="Default select example" value="@Model.reclamation.etat">
-                          <option value="1">Pas encore traitée</option>
-                          <option value="2">En cours</option>
-                          <option value="3">Résolue</option>
-                          <option value="4">Pas de solution</option>
-                        </select>
-            </div>
-        
+            @if (Model.role != "USER")
+            {
+              <div class="col-4 ">
+                          <label class="form-label" for="modalEditUserStatus">Etat : </label>
+                          <select name="etat" class="form-select" aria-label="Default select example" value="@Model.reclamation.etat">
+                            <option value="1">Pas encore traitée</option>
+                            <option value="2">En cours</option>
+                            <option value="3">Résolue</option>
+                            <option value="4">Pas de solution</option>
+                          </select>
+              </div>
+            }else{
+                        <div class="col-4 ">
+                          <label class="form-label" for="modalEditUserStatus">Etat : </label>
+                          <select name="etat" class="form-select" aria-label="Default select example" value="@Model.reclamation.etat" disabled>
+                            <option value="1">Pas encore traitée</option>
+                            <option value="2">En cours</option>
+                            <option value="3">Résolue</option>
+                            <option value="4">Pas de solution</option>
+                          </select>
+              </div>
+            }
             <div class="col-sm-12 mt-5" >
               <button type="submit" class="btn btn-primary data-submit me-sm-3 me-1">Enregistrer</button>
             </div>
@@ -122,13 +136,14 @@
 
 
 
-<div class="card h-75 mt-3">
+<div class="card h-75 mt-3 mb-3">
   <div class="card-header">
     <div class="float-end">
-        
+      @if (Model.role != "USER")
+      {
         <button class="btn btn-secondary btn-primary"  data-bs-toggle="offcanvas" type="button" data-bs-target="#offcanvasEnd" aria-controls="offcanvasEnd"
         ><span><i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Nouveaux</span></span></button>
-
+      }
     </div>
   </div>
   <div class="table-responsive text-nowrap h-100">
@@ -138,7 +153,9 @@
           <th>desciption</th>
           <th>Date creation</th>
           <th>Date modification</th>
+          @if (Model.role != "USER"){
           <th>Action</th>
+          }
         </tr>
       </thead>
       <tbody class="table-border-bottom-0">
@@ -157,11 +174,14 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.updatedAt)
                 </td>
-                 <td>
-            <div class="dropdown">
-              <a class="dropdown-item" href="#" onclick="submitForm(@item.Id)" ><i class="ti ti-trash me-1"></i> Supprimé</a>
-            </div>
-          </td>
+            @if (Model.role != "USER")
+            {
+              <td>
+                <div class="dropdown">
+                  <a class="dropdown-item" href="#" onclick="submitForm(@item.Id)" ><i class="ti ti-trash me-1"></i> Supprimé</a>
+                </div>
+              </td>
+            }
             </tr>
         }
       }

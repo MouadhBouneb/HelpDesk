@@ -11524,19 +11524,19 @@
     ]
   },
   "packageFolders": {
-    "/home/paypos/.nuget/packages/": {}
+    "/home/mouadh/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/paypos/Desktop/study/HelpDesk4GL/HelpDesk4GL.csproj",
+      "projectUniqueName": "/home/mouadh/Desktop/study/HelpDesk/HelpDesk4GL.csproj",
       "projectName": "HelpDesk4GL",
-      "projectPath": "/home/paypos/Desktop/study/HelpDesk4GL/HelpDesk4GL.csproj",
-      "packagesPath": "/home/paypos/.nuget/packages/",
-      "outputPath": "/home/paypos/Desktop/study/HelpDesk4GL/obj/",
+      "projectPath": "/home/mouadh/Desktop/study/HelpDesk/HelpDesk4GL.csproj",
+      "packagesPath": "/home/mouadh/.nuget/packages/",
+      "outputPath": "/home/mouadh/Desktop/study/HelpDesk/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/paypos/.nuget/NuGet/NuGet.Config"
+        "/home/mouadh/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"

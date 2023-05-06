@@ -14,7 +14,7 @@ public class UsersController : Controller
     private readonly ApplicationDbContext _context;
     private readonly UserManager<User> _userManager;
 
-    public UsersController(ApplicationDbContext context,UserManager<User> userManager)
+    public UsersController(ApplicationDbContext context, UserManager<User> userManager)
     {
         _context = context;
         _userManager = userManager;
@@ -23,8 +23,13 @@ public class UsersController : Controller
 
     // GET: /Users
     [Authorize]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        var user = await _userManager.GetUserAsync(User);
+        if (user.role != "ADMIN")
+        {
+            return RedirectToAction("Index", "Reclamation");
+        }
         var users = _context.Users.ToList();
         var message = "";
         if (TempData != null && TempData["Message"] != null && TempData["Message"].ToString() != "")
@@ -48,8 +53,14 @@ public class UsersController : Controller
 
     // GET: /Users/Details/5
     [Authorize]
-    public IActionResult Details(String? id)
+    public async Task<IActionResult> Details(String? id)
     {
+        var userConnected = await _userManager.GetUserAsync(User);
+
+        if (userConnected.role != "ADMIN")
+        {
+            return RedirectToAction("Index", "Reclamation");
+        }
         if (id == null)
         {
             return NotFound();
@@ -71,17 +82,17 @@ public class UsersController : Controller
     public async Task<IActionResult> Create(UserRequest userRequest)
     {
         if (ModelState.IsValid)
-        {   
+        {
             User user = new User();
             user.createdAt = DateTime.UtcNow;
             user.updatedAt = DateTime.UtcNow;
-            user.role=userRequest.role;
-            user.Email=userRequest.Email;
-            user.UserName=userRequest.Email;
-            user.NormalizedUserName=userRequest.Email;
-            user.fullName=userRequest.fullName;
+            user.role = userRequest.role;
+            user.Email = userRequest.Email;
+            user.UserName = userRequest.Email;
+            user.NormalizedUserName = userRequest.Email;
+            user.fullName = userRequest.fullName;
             var result = await _userManager.CreateAsync(user, userRequest.password);
-            Console.WriteLine("res="+result);
+            Console.WriteLine("res=" + result);
             // _context.Users.Add(user);
             // _context.SaveChanges();
             TempData["status"] = true;

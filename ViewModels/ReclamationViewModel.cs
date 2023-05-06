@@ -9,5 +9,7 @@ public class ReclamationsViewModel
     public string Message { get; set; }
     public bool status { get; set; }
 
+    public string? role { get; set; }
+
 }
 
