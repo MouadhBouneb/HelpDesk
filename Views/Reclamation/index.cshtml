@@ -63,9 +63,42 @@
 
 <div class="card h-75">
   <div class="card-header">
+   @using (Html.BeginForm("Filtre", "Reclamation", FormMethod.Post))
+                    {
+                      <div class="row">
+                        <div class="col-4 ">
+                          <label class="form-label" for="modalEditUserStatus">Utilisateur : </label>
+                          <select name="etat" class="form-select" aria-label="Default select example" >
+                              <option value="-1">Aucune choix selectionné</option>
+                              @foreach (var item in Model.users)
+                              {
+                                <option value="@item.Id">@Html.DisplayFor(modelItem => item.fullName)</option>
+                              }
+                          </select>
+                        </div>
+                        <div class="col-4 ">
+                          <label class="form-label" for="modalEditUserStatus">Etat : </label>
+                          <select name="etat" class="form-select" aria-label="Default select example" >
+                            <option value="-1">Aucune choix selectionné</option>
+                            <option value="1">Pas encore traitée</option>
+                            <option value="2">En cours</option>
+                            <option value="3">Résolue</option>
+                            <option value="4">Pas de solution</option>
+                          </select>
+                        </div>
+                         <div class="col-4 text-center ">
+                        <button type="submit" class="btn btn-primary me-sm-3 me-1 mt-4">Enregistrer</button>
+                        <button type="reset" class="btn btn-label-secondary mt-4" data-bs-dismiss="modal" aria-label="Close">Annuler</button>
+                      </div>
+                      </div>
+                     
+                    
+                     
+                    }
+<br/>
     <div class="float-end">
-<button class="btn btn-secondary btn-primary"  data-bs-toggle="offcanvas" type="button" data-bs-target="#offcanvasEnd" aria-controls="offcanvasEnd"
-><span><i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Nouveaux</span></span></button>
+      <button class="btn btn-secondary btn-primary"  data-bs-toggle="offcanvas" type="button" data-bs-target="#offcanvasEnd" aria-controls="offcanvasEnd"
+      ><span><i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Nouveaux</span></span></button>
 
      
 

@@ -22,12 +22,62 @@ public class ReclamationController : Controller
         _userManager = userManager;
 
     }
+    public ReclamationsViewModel filtreReclamation(string? userId, string? etat)
+    {
+        List<Reclamation>? reclamations;
+
+        if (userId != "-1" && etat != "-1")
+        {
+            reclamations = _context.Reclamations.Where(item => item.UserId == userId)
+                       .Where(x => x.etat == etat).ToList();
+        }
+        else if (userId != "-1")
+        {
+            reclamations = _context.Reclamations.Where(item => item.UserId == userId).ToList();
+        }
+        else if (etat != "-1")
+        {
+            reclamations = _context.Reclamations.Where(x => x.etat == etat).ToList();
+        }
+        else
+        {
+            reclamations = _context.Reclamations.ToList();
+        }
+        Console.WriteLine("Reclamations : " + reclamations);
+        var viewModel = new ReclamationsViewModel
+        {
+            reclamations = reclamations,
+            users = _context.Users.ToList(),
+            Message = "",
+            status = true
+        };
+        return viewModel;
+    }
 
     // GET: /Reclamation
     [Authorize]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var reclamations = _context.Reclamations.ToList();
+
+        if (TempData.ContainsKey("etat") && TempData.ContainsKey("user"))
+        {
+            var etat = TempData.Peek("etat") as string;
+            var userid = TempData.Peek("user") as string;
+            TempData.Clear();
+
+            return View("index", filtreReclamation(userid, etat));
+        }
+        var user = await _userManager.GetUserAsync(User);
+        List<Reclamation>? reclamations;
+        if (user.role == "TECK" || user.role == "ADMIN")
+        {
+            reclamations = _context.Reclamations.ToList();
+        }
+        else
+        {
+            reclamations = _context.Reclamations.Where(item => item.user == user).ToList();
+        }
+
         var users = _context.Users.ToList();
         var message = "";
         if (TempData != null && TempData["Message"] != null && TempData["Message"].ToString() != "")
@@ -46,6 +96,8 @@ public class ReclamationController : Controller
             Message = message,
             status = status
         };
+        TempData.Clear();
+
         // Console.WriteLine(reclamations[0].Id);
         return View("index", viewModel);
     }
@@ -85,8 +137,54 @@ public class ReclamationController : Controller
             Message = message,
             status = status
         };
+        TempData.Clear();
 
         return View("detail", viewModel);
+    }
+
+    // POST: /Reclamation/Create
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Filtre(string? userId, string? etat)
+    {
+
+        // List<Reclamation>? reclamations;
+
+        // if (userId != "-1" && etat != "-1")
+        // {
+        //     reclamations = _context.Reclamations.Where(item => item.UserId == userId)
+        //                .Where(x => x.etat == etat).ToList();
+        // }
+        // else if (userId != "-1")
+        // {
+        //     reclamations = _context.Reclamations.Where(item => item.UserId == userId).ToList();
+        // }
+        // else if (etat != "-1")
+        // {
+        //     reclamations = _context.Reclamations.Where(x => x.etat == etat).ToList();
+        // }
+        // else
+        // {
+        //     reclamations = _context.Reclamations.ToList();
+        // }
+
+        // var viewModel = new ReclamationsViewModel
+        // {
+        //     reclamations = reclamations,
+        //     users = _context.Users.ToList(),
+        //     Message = "",
+        //     status = true
+        // };
+        TempData["user"] = userId;
+        TempData["etat"] = etat;
+
+        return RedirectToAction(nameof(Index));
+
+        // return View(reclamation);
+        TempData["status"] = false;
+        TempData["Message"] = "Merci de verifier vos informations";
+        return RedirectToAction("index");
     }
 
     // POST: /Reclamation/Create
@@ -97,11 +195,11 @@ public class ReclamationController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user=await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             reclamation.createdAt = DateTime.UtcNow;
             reclamation.updatedAt = DateTime.UtcNow;
             reclamation.etat = "1";
-            reclamation.user= user;
+            reclamation.user = user;
             reclamation.etatString = "Pas encore traitée";
             _context.Reclamations.Add(reclamation);
             _context.SaveChanges();
